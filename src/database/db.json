@@ -65,7 +65,7 @@
       ]
     },
     {
-      "name": "Core Buster",
+      "name": "Core booster",
       "mode": "AMRAP 20",
       "equipment": [
         "rack",
@@ -84,7 +84,7 @@
       ],
       "id": "09419e3f-7a08-4ba1-acdb-dcfd3fb59df3",
       "createdAt": "3/15/2023, 5:22:45 AM",
-      "updateAt": "3/15/2023, 5:22:45 AM"
+      "updatedAt": "3/18/2023, 4:25:19 AM"
     }
   ]
 }
