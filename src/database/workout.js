@@ -42,4 +42,14 @@ const updateWorkout = (id, changes) => {
     saveToDataBase(DB)
     return DB.workouts[workoutIndex];
 }
-module.exports = { getAllWorkouts, createdNewWorkout, getWorkout, updateWorkout };
+
+const deleteOneWorkout = (id) => {
+    const workoutIndex= DB.workouts.findIndex((workout) => workout.id === id);
+    if (!workoutIndex){
+        return console.log("No existe")
+    }
+    DB.workouts.splice(workoutIndex, 1);
+    saveToDataBase(DB)
+    return;
+}
+module.exports = { getAllWorkouts, createdNewWorkout, getWorkout, updateWorkout, deleteOneWorkout };
