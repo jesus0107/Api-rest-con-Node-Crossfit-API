@@ -1,35 +1,54 @@
 const workout = require('../database/workout');
 const { v4: uuid } = require('uuid');
 
-const getAllWorkouts = () =>{
-    const workouts = workout.getAllWorkouts()
-    return workouts;
+const getAllWorkouts = async () =>{
+    try {
+        const workouts = await workout.getAllWorkouts()
+        return workouts;
+    } catch (error) {
+        throw error;
+    }
 };
 
-const createOneWorkout = (newWorkout) =>{
+const createOneWorkout = async (newWorkout) =>{
     const workoutToInsert = {
         id: uuid(),
         ...newWorkout,
         createdAt: new Date().toLocaleString("en-US", {timeZone: "UTC"}),
-        updateAt: new Date().toLocaleString("en-US", {timeZone: "UTC"})
+        updatedAt: new Date().toLocaleString("en-US", {timeZone: "UTC"})
     }
-    const createdWorkout = workout.createdNewWorkout(workoutToInsert)
-    return createdWorkout;
+    try {
+        const createdWorkout = await workout.createdNewWorkout(workoutToInsert)
+        return createdWorkout;
+    } catch (error) {
+        throw error;
+    }
 };
 
-const getOneWorkout = (id) =>{
-    const getedworkout = workout.getWorkout(id);
-    return getedworkout;
+const getOneWorkout = async (id) =>{
+    try {
+        const getedworkout = workout.getWorkout(id);
+        return getedworkout;
+    } catch (error) {
+        throw error;
+    }
 };
 
-const updateOneWorkout = (id, changes) =>{
-    const workoutUpdated = workout.updateWorkout(id, changes);
-    return workoutUpdated;
+const updateOneWorkout = async (id, changes) =>{
+    try{
+        const workoutUpdated = workout.updateWorkout(id, changes);
+        return workoutUpdated;
+    } catch (error){
+        throw error;
+    }
 };
 
-const deleteOneWorkout = (id) =>{
-    const removeworkout = workout.deleteOneWorkout(id)
-    return removeworkout;
+const deleteOneWorkout = async (id) =>{
+    try {
+        await workout.deleteOneWorkout(id);
+    } catch (error) {
+        throw error;
+    }
 };
 
 

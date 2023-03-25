@@ -1,55 +1,94 @@
 const DB  = require('./db.json')
 const { saveToDataBase } = require('./utils')
 
-const getAllWorkouts = () => {
-    return DB.workouts;
+const getAllWorkouts = async () => {
+    try {
+        return DB.workouts;
+    } catch (error) {
+        throw {
+            status: 500,
+            message: error?.message || error,
+        }
+    }
 }
 
-const createdNewWorkout = (newWorkout) => {
-    const isExists = DB.workouts.findIndex(
-        (workout) => workout.name === newWorkout.name
-        ) > -1;
-    if(isExists){
-        return console.log("Algo paso")
+const createdNewWorkout = async (newWorkout) => {
+    try {
+        const isExists = DB.workouts.findIndex((workout) => workout.name === newWorkout.name) > -1;
+        if(isExists){
+            throw {
+                status: 400,
+                message: `Workout with the name '${newWorkout.name}' already exists`,
+            };
+        }
+        DB.workouts.push(newWorkout);
+        saveToDataBase(DB);
+        return newWorkout;
+    } catch (error) {
+        throw {
+            status: 500,
+            message: error?.message || error,
+        }
     }
-    DB.workouts.push(newWorkout);
-    saveToDataBase(DB);
-    return newWorkout;
+
 }
 
-const getWorkout = (id) => {
-    const workout = DB.workouts.find((workout) => workout.id === id);
-    if (!workout){
-        return console.log("No existe")
-    }
+const getWorkout = async (id) => {
+    try {
+        const workout = DB.workouts.find((workout) => workout.id === id);
+        if(!workout){
+            throw {
+                status: 404,
+                message: `Workout is not exists`,
+            };
+        }
     return workout;
+    } catch (error) {
+        throw {
+            status: 500,
+            message: error?.message || error,
+        }
+    }
 }
 
-const updateWorkout = (id, changes) => {
-    const workoutIndex= DB.workouts.findIndex((workout) => workout.id === id);
-    console.log(workoutIndex)
-    if (!workoutIndex){
-        return console.log("No existe")
-    }
-    const workoutToUpdate = {
-        ...DB.workouts[workoutIndex],
-        ...changes,
-        updatedAt: new Date().toLocaleString("en-US", {timeZone: "UTC"})
+const updateWorkout = async (id, changes) => {
+    try {
+        const workoutIndex= DB.workouts.findIndex((workout) => workout.id === id);
+        if(workoutIndex === -1){
+            throw {
+                status: 404,
+                message: `Can't find workout with the id '${workoutIndex}'`,
+            };
+        }
+        const workoutToUpdate = {
+            ...DB.workouts[workoutIndex],
+            ...changes,
+            updatedAt: new Date().toLocaleString("en-US", {timeZone: "UTC"})
 
+        }
+        DB.workouts[workoutIndex] = workoutToUpdate;
+        saveToDataBase(DB)
+        return DB.workouts[workoutIndex];
+
+    } catch (error) {
+        throw { status: error?.status || 500, message: error?.message || error };
     }
-    DB.workouts[workoutIndex] = workoutToUpdate;
-    console.log(workoutToUpdate)
-    saveToDataBase(DB)
-    return DB.workouts[workoutIndex];
 }
 
-const deleteOneWorkout = (id) => {
-    const workoutIndex= DB.workouts.findIndex((workout) => workout.id === id);
-    if (!workoutIndex){
-        return console.log("No existe")
+const deleteOneWorkout =  (id) => {
+    try {
+        const workoutIndex= DB.workouts.findIndex((workout) => workout.id === id);
+        if(workoutIndex === -1){
+            throw {
+                status: 404,
+                message: `Can't find workout with the id '${workoutIndex}'`,
+            };
+        }
+        DB.workouts.splice(workoutIndex, 1);
+        saveToDataBase(DB)
+    } catch (error) {
+        throw { status: error?.status || 500, message: error?.message || error };
     }
-    DB.workouts.splice(workoutIndex, 1);
-    saveToDataBase(DB)
-    return;
+
 }
 module.exports = { getAllWorkouts, createdNewWorkout, getWorkout, updateWorkout, deleteOneWorkout };
